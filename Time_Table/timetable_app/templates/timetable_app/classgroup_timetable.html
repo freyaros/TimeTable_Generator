@@ -1,0 +1,49 @@
+{% load timetable_extras %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'timetable_app/timetable.css' %}">
+    <title>Timetable for {{ class_group.name }}</title>
+</head>
+<body>
+    <div class="site-container">
+        {% include "timetable_app/navbar.html" %}
+        <h1>Class Group: {{ class_group.name }}</h1>
+        <button onclick="window.print()" class="noprint">Print Timetable</button>
+        <form method="post" action="{% url 'delete_classgroup_timetable' class_group.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="noprint" onclick="return confirm('Are you sure you want to delete the entire timetable for this class group?');" style="background:#E54646; color:#fff; margin-left:12px;">
+                Delete Timetable
+            </button>
+        </form>
+        <table>
+            <tr>
+                <th>Period</th>
+                {% for day in days %}
+                    <th>{{ day }}</th>
+                {% endfor %}
+            </tr>
+            {% for period in 1|to:9 %}
+            <tr>
+                <td>{{ period }}</td>
+                {% for day in days %}
+                    <td>
+                        {% if day == "Sunday" %}
+                            Holiday
+                        {% else %}
+                            {% for entry in entries %}
+                                {% if entry.day == day and entry.period == period %}
+                                    {{ entry.subject }}<br>
+                                    <small>{{ entry.teacher }}</small>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

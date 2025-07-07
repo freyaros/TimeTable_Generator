@@ -1,0 +1,13 @@
+<nav>
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'timetable_create' %}">Create Timetable Entry</a>
+    <form>
+        <label for="classgroup_nav">View Timetables:</label>
+        <select id="classgroup_nav" onchange="if(this.value) window.location.href=this.value;">
+            <option value="">Select Class and Division</option>
+            {% for group in class_groups %}
+                <option value="{% url 'classgroup_timetable' group.id %}">{{ group.name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</nav>

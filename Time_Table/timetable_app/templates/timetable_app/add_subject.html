@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'timetable_app/timetable.css' %}">
+    <title>Add Subject</title>
+</head>
+<body>
+    <div class="site-container">
+        {% include "timetable_app/navbar.html" %}
+        <h1>Add Subject</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Add</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'timetable_app/timetable.css' %}">
+    <title>Create Timetable Entry</title>
+    <script>
+    function handleDropdownChange(select, addUrl) {
+        if (select.value === "__addnew__") {
+            window.location.href = addUrl;
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="site-container">
+        {% include "timetable_app/navbar.html" %}
+        <h1>Create Timetable Entry</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label for="id_class_group">Class Group:</label>
+            <select name="class_group" id="id_class_group" onchange="handleDropdownChange(this, '{% url 'add_class_group' %}')">
+                {% for group in form.fields.class_group.queryset %}
+                    <option value="{{ group.pk }}" {% if form.initial.class_group == group.pk %}selected{% endif %}>{{ group.name }}</option>
+                {% endfor %}
+                <option value="__addnew__">+ Add New Class Group</option>
+            </select>
+
+            <label for="id_subject">Subject:</label>
+            <select name="subject" id="id_subject" onchange="handleDropdownChange(this, '{% url 'add_subject' %}')">
+                {% for subject in form.fields.subject.queryset %}
+                    <option value="{{ subject.pk }}" {% if form.initial.subject == subject.pk %}selected{% endif %}>{{ subject.name }}</option>
+                {% endfor %}
+                <option value="__addnew__">+ Add New Subject</option>
+            </select>
+
+            <label for="id_teacher">Teacher:</label>
+            <select name="teacher" id="id_teacher" onchange="handleDropdownChange(this, '{% url 'add_teacher' %}')">
+                {% for teacher in form.fields.teacher.queryset %}
+                    <option value="{{ teacher.pk }}" {% if form.initial.teacher == teacher.pk %}selected{% endif %}>{{ teacher.name }}</option>
+                {% endfor %}
+                <option value="__addnew__">+ Add New Teacher</option>
+            </select>
+
+            {{ form.day.label_tag }}{{ form.day }}
+            {{ form.period.label_tag }}{{ form.period }}
+
+            <button type="submit">Create</button>
+        </form>
+
+        {% if form.non_field_errors %}
+            <div class="error">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        {% if success_message %}
+            <div class="success-message">
+                {{ success_message }}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
